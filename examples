@@ -1,4 +1,4 @@
-
+# Use an editor (vi, vim, etc.) or echo commands to update each file with the settings noted under each.
 
 /etc/sysctl.d/99-azure-network-buffers.conf
 net.core.rmem_max = 2147483647
