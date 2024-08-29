@@ -27,5 +27,3 @@ SUBSYSTEM=="net", ACTION=="add|change", KERNEL=="eth*", ATTR{tx_queue_len}="1000
 IRQBALANCE_BANNED_CPULIST=0-2
 
 
-
-# Credit goes to https://github.com/naioja for helping find this out 
