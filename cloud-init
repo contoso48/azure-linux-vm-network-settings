@@ -1,48 +1,52 @@
 #cloud-config
 package_upgrade: true
 packages:
-    - iperf3
-    - apache2-utils
+  - apt-transport-https
+  - sockperf
+  - curl
+  - iperf3
+  - traceroute
+  - net-tools
 write_files:
-    - path: /etc/sysctl.d/99-azure-network-buffers.conf
-      owner: root:root
-      permissions: 0644
-      content: |
-        net.core.rmem_max = 2147483647
-        net.core.wmem_max = 2147483647
-        net.ipv4.tcp_rmem = 4096 67108864 1073741824
-        net.ipv4.tcp_wmem = 4096 67108864 1073741824
-    - path: /etc/sysctl.d/99-azure-congestion-control.conf
-      owner: root:root
-      permissions: 0644
-      content: |
-        net.ipv4.tcp_congestion_control = bbr
-    - path: /etc/sysctl.d/99-azure-qdisc.conf
-      owner: root:root
-      permissions: 0644
-      content: |
-        net.core.default_qdisc = fq
-    - path: /etc/udev/rules.d/99-azure-qdisc.rules
-      owner: root:root
-      permissions: 0644
-      content: |
-        ACTION=="add|change", SUBSYSTEM=="net", KERNEL=="enP*", PROGRAM="/sbin/tc qdisc replace dev \$env{INTERFACE} root noqueue"
-        ACTION=="add|change", SUBSYSTEM=="net", KERNEL=="eth*", PROGRAM="/sbin/tc qdisc replace dev \$env{INTERFACE} root fq"
-    - path: /etc/udev/rules.d/99-azure-txqueue-len.rules
-      owner: root:root
-      permissions: 0644
-      content: |
-        SUBSYSTEM=="net", ACTION=="add|change", KERNEL=="eth*", ATTR{tx_queue_len}="10000"
-    - path: /etc/modules-load.d/99-azure-tcp-bbr.conf
-      owner: root:root
-      permissions: 0644
-      content: |
-        tcp_bbr
+  - path: /etc/sysctl.d/99-azure-network-buffers.conf
+    owner: root:root
+    permissions: 0644
+    content: |
+      net.core.rmem_max = 2147483647
+      net.core.wmem_max = 2147483647
+      net.ipv4.tcp_rmem = 4096 67108864 1073741824
+      net.ipv4.tcp_wmem = 4096 67108864 1073741824
+  - path: /etc/sysctl.d/99-azure-congestion-control.conf
+    owner: root:root
+    permissions: 0644
+    content: |
+      net.ipv4.tcp_congestion_control = bbr
+  - path: /etc/sysctl.d/99-azure-qdisc.conf
+    owner: root:root
+    permissions: 0644
+    content: |
+      net.core.default_qdisc = fq
+  - path: /etc/udev/rules.d/99-azure-qdisc.rules
+    owner: root:root
+    permissions: 0644
+    content: |
+      ACTION=="add|change", SUBSYSTEM=="net", KERNEL=="enP*", PROGRAM="/sbin/tc qdisc replace dev \$env{INTERFACE} root noqueue"
+      ACTION=="add|change", SUBSYSTEM=="net", KERNEL=="eth*", PROGRAM="/sbin/tc qdisc replace dev \$env{INTERFACE} root fq"
+  - path: /etc/udev/rules.d/99-azure-txqueue-len.rules
+    owner: root:root
+    permissions: 0644
+    content: |
+      SUBSYSTEM=="net", ACTION=="add|change", KERNEL=="eth*", ATTR{tx_queue_len}="10000"
+  - path: /etc/modules-load.d/99-azure-tcp-bbr.conf
+    owner: root:root
+    permissions: 0644
+    content: |
+      tcp_bbr
 bootcmd:
-    - [systemctl, restart, systemd-udev-trigger.service]
+  - [systemctl, restart, systemd-udev-trigger.service]
 runcmd:
-    - [ modprobe, tcp_bbr ]
-    - [ sysctl, --system ]
-    - [ sleep, 15 ]
-    - [ udevadm, control, --reload-rules ]
-    - [ udevadm, trigger, --subsystem-match=net ]
+  - [ modprobe, tcp_bbr ]
+  - [ sysctl, --system ]
+  - [ sleep, 15 ]
+  - [ udevadm, control, --reload-rules ]
+  - [ udevadm, trigger, --subsystem-match=net ]
