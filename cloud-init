@@ -42,6 +42,11 @@ write_files:
     permissions: 0644
     content: |
       tcp_bbr
+  - path: /etc/default/irqbalance
+    owner: root:root
+    permissions: 0644
+    content: |
+      IRQBALANCE_BANNED_CPULIST=0-2
 bootcmd:
   - [systemctl, restart, systemd-udev-trigger.service]
 runcmd:
