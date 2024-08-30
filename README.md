@@ -6,7 +6,7 @@ Use-case example:
 Linux client in West US region pulling single large (GB) file from a source system (example GitHub Enterprise Server) in West Europe region, over 150ms apart in latency.    
 - Default Azure Marketplace Linux OS settings will achieve X transfer rates
    - Same VMs with updated OS settings in this example achieve over 3x of untuned transfer rate
-- Example measurement with "iperf3 -n 2048M -c <ipaddr> -w 32M"
+- Example measurement with "iperf3 -n 2048M -c ipaddr -w 32M"
    - 100-200Mbps single threaded test without tuning
    - and >1Gbps with OS network setting applied
 
