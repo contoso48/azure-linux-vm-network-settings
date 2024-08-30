@@ -1,0 +1,17 @@
+# Example using echo command in shell on Linux Ubunto OS
+
+echo 'net.core.rmem_max = 2147483647' >> /etc/sysctl.d/99-azure-network-buffers.conf
+echo 'net.core.wmem_max = 2147483647' >> /etc/sysctl.d/99-azure-network-buffers.conf
+echo 'net.ipv4.tcp_rmem = 4096 67108864 1073741824' >> /etc/sysctl.d/99-azure-network-buffers.conf
+echo 'net.ipv4.tcp_wmem = 4096 67108864 1073741824' >> /etc/sysctl.d/99-azure-network-buffers.conf
+echo 'tcp_bbr' >> /etc/modules-load.d/99-azure-tcp-bbr.conf
+echo 'net.ipv4.tcp_congestion_control = bbr' >> /etc/sysctl.d/99-azure-congestion-control.conf
+echo 'net.core.default_qdisc = fq' >> /etc/sysctl.d/99-azure-qdisc.conf
+echo 'IRQBALANCE_BANNED_CPULIST=0-2' >> /etc/default/irqbalance
+
+
+# MISSING ITEMS - UNTESTED DUE TO QUOTES & FORMATTING 
+# echo 'ACTION=="add|change", SUBSYSTEM=="net", KERNEL=="enP*", PROGRAM="/sbin/tc qdisc replace dev \$env{INTERFACE} root noqueue"' >> /etc/udev/rules.d/99-azure-qdisc.rules
+# echo 'ACTION=="add|change", SUBSYSTEM=="net", KERNEL=="eth*", PROGRAM="/sbin/tc qdisc replace dev \$env{INTERFACE} root fq“' >> /etc/udev/rules.d/99-azure-qdisc.rules
+# echo 'SUBSYSTEM=="net", ACTION=="add|change", KERNEL=="eth*", ATTR{tx_queue_len}="10000“' >> /etc/udev/rules.d/99-azure-txqueue-len.rules
+
